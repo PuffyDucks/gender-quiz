@@ -1,0 +1,95 @@
+body {
+    background-color: #e6d1e1;
+    margin: 0;
+}
+
+p {
+    font-size: 35px;
+    font-family: 'BIZ UDPMincho', serif;
+}
+
+#text {
+    font-size: 20px;
+    text-align: left;
+    line-height: 2;
+}
+
+.right {
+    text-align: right;
+}
+
+button {
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: none;
+    border-radius: 12px;
+    transition-duration: 0.2s;
+    font-family: 'Roboto Slab', serif;
+    font-size: 17px;
+}
+
+#main {
+    background-color: white;
+    width: 50%;
+    min-height: calc(100vh - 100px);
+    text-align: center;
+    padding: 50px;
+    margin: 0 auto;
+}
+
+#progress {
+    font-size: 20px;
+}
+
+.opt {
+    min-width: 200px;
+    border-style: solid;
+    border-color: #baa9b6;
+}
+
+.opt:hover {
+    background-color: #E6E6E6 !important;
+}
+
+#back {
+    display: inline;
+}
+
+#back:hover {
+    background-color: #94aed4 !important;
+}
+
+#submit {
+    background-color: #9aad9b;
+    color: #718a75;
+    display: inline;
+}
+
+#submit:hover {
+    background-color: #69bf6f !important;
+}
+
+#begin {
+    background-color: #7bed83;
+}
+
+#begin:hover {
+    background-color: #69bf6f;
+}
+
+.loader {
+    border: 10px solid #f3f3f3; 
+    border-top: 10px solid #e89ed7; 
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto;
+}
+  
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
