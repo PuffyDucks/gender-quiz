@@ -112,14 +112,17 @@ function loadQuestion() {
     submitButton.setAttribute("onClick", "window.location.href='calculate.html'");
     submitButton.style.color = "#000000";
     submitButton.style.backgroundColor = "#7bed83";
+    submitButton.style.cursor = "pointer";
   } 
 
   if(currentQuestion == 1) {
     backButton.style.backgroundColor = "#A1AEC2";
     backButton.style.color = "#768394";
+    backButton.style.cursor = "auto";
   } else {
     backButton.style.backgroundColor = "#A9CBFF";
     backButton.style.color = "#000000";
+    backButton.style.cursor = "pointer";
   }
 
   // switches text to match new question
