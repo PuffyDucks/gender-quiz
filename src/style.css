@@ -1,50 +1,57 @@
 html, body {
-    background-color: #e6d1e1;
+    background-color: rgb(93, 93, 107);
     margin: 0;
-    font-family: 'BIZ UDPMincho', serif;
-    height: 100%;
-}
-
-#text {
-    text-align: left;
-    line-height: 2;
 }
 
 #main {
-    background-color: white;
-    width: 75%;
-    min-height: calc(100vh - 40px - 4vw);
+    font-family: 'Roboto Slab', serif;
+    height: 100%;
     text-align: center;
-    padding: calc(20px + 2vw);
     margin: 0 auto;
+    color: white;
 }
 
 #progress {
-    font-size: 20px;
+    font-size: 27px;
+    margin: 0;
 }
 
 #qstn {
-    font-size: 25px;
+    font-size: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#title {
+    background: rgb(24, 10, 10);
+    width: 100%;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 button {
     margin: 0 auto;
     display: none;
     margin-bottom: 20px;
-    padding: 10px;
+    padding: 16px;
     border: none;
     border-radius: 12px;
-    font-family: 'Roboto Slab', serif;
-    font-size: 17px;
     cursor: pointer;
+    font-family: 'Roboto Slab', serif;
 }
 
 .opt {
-    min-width: 200px;
+    min-width: 20%;
+    border-radius: 5px;
+    margin: 10px;
+    font-size: 30px;
 }
 
 .player {
     display: none;
+    font-size: 20px;
+    margin-top: 30px;
 }
 
 #explode {
@@ -64,4 +71,4 @@ button {
     font-family: "Comic Sans MS";
     font-size: 80px;
     background-color: yellow;
-}
+}   

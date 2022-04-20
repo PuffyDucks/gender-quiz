@@ -5,10 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Process of Elimination</title>
-    <link rel="icon" href="icon.png">
-    <link rel="stylesheet" type="text/css" href="style.css" title="style"/>
-    <script src="howler/dist/howler.js"></script>
-    <script type="text/javascript" src="script.js"></script>
+    <link rel="icon" href="media/icon.png">
+    <link rel="stylesheet" type="text/css" href="src/style.css" title="style"/>
+    <script src="src/howler/dist/howler.js"></script>
+    <script type="text/javascript" src="src/questions.js"></script>
+    <script type="text/javascript" src="src/script.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPMincho&display=swap" rel="stylesheet">
@@ -18,11 +19,13 @@
     <script>
         const {Howl, Howler} = require('howler');
     </script>
-    <img id="explode" src="EXPLODE.gif" height="100%">
+    <img id="explode" src="media/EXPLODE.gif" height="100%">
     <div id="main">
         <div>
-            <p id="progress"></p>
-            <p id="qstn"></p>
+            <div id="title">
+                <p id="progress"></p>
+                <p id="qstn"></p>
+            </div>
             <button class="opt" id="opt1"></button>
             <button class="opt" id="opt2"></button>
             <button class="opt" id="opt3"></button>
@@ -31,7 +34,7 @@
             <button class="opt" id="opt6"></button>
             <button class="opt" id="opt7"></button>
         </div>
-        <div>
+        <div id="players">
             <button class="player" id="p1"></button>
             <button class="player" id="p2"></button>
             <button class="player" id="p3"></button>
@@ -40,7 +43,7 @@
             <button class="player" id="p6"></button>
         </div>
     </div>
-    <img id="win" src="star.jpg" height="100%">
+    <img id="win" src="media/star.jpg" height="100%">
     <div id="wintext">
         <p></p>
     </div>
