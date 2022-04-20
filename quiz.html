@@ -4,21 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="media/icon.png">
-    <link rel="stylesheet" type="text/css" href="src/style.css" title="style"/>
     <title>What Gender Am I?</title>
     <link rel="icon" href="icon.png">
     <link rel="stylesheet" type="text/css" href="style.css" title="style"/>
+    <script type="text/javascript" src="script.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPMincho&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
 </head>
-    <div id="main">
-        <p id="title">Gender Quiz</p>
-        <img src="people.png" style="display: block; margin: auto; width: 50%">
-        <p id="text">This quiz will use a handful of questions to pinpoint your exact gender. Unsure about your gender? Think we can't guess what your gender is? Take this quiz to find out!</p>
-        <button id="begin" onclick="window.location.href='quiz.html'">Begin</button>
+<body onload="loadElements()">
+    <div id="main" class="w3-animate-opacity">
+        <div>
+            <p id="progress"></p>
+            <p id="qstn"></p>
+            <button class="opt" id="optA"></button>
+            <button class="opt" id="optB"></button>
+        </div>
+        <div>
+            <button id="back">Go Back</button>
+            <button id="submit">Submit</button>
+        </div>
     </div>
 </body>
 </html>
