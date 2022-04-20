@@ -1,38 +1,13 @@
-body {
+html, body {
     background-color: #e6d1e1;
     margin: 0;
-}
-
-p {
     font-family: 'BIZ UDPMincho', serif;
+    height: 100%;
 }
 
 #text {
     text-align: left;
     line-height: 2;
-}
-
-@media screen and (min-width: 601px) {
-    p {
-        font-size: 35px;
-    }
-
-    #text {
-        font-size: 20px;
-    }
-  }
-  
-@media screen and (max-width: 600px) {
-    p {
-        font-size: 28px;
-    }
-    #text {
-        font-size: 17px;
-    }
-}
-
-#error {
-    margin-top: 0;
 }
 
 #main {
@@ -44,75 +19,49 @@ p {
     margin: 0 auto;
 }
 
-image {
-    margin: 0;
-}
-
 #progress {
     font-size: 20px;
 }
 
+#qstn {
+    font-size: 25px;
+}
+
 button {
     margin: 0 auto;
-    display: block;
+    display: none;
     margin-bottom: 20px;
-    padding: 20px;
+    padding: 10px;
     border: none;
     border-radius: 12px;
-    transition-duration: 0.2s;
     font-family: 'Roboto Slab', serif;
     font-size: 17px;
     cursor: pointer;
 }
 
-#begin {
-    background-color: #7bed83;
-}
-
-/* #begin:hover {
-    background-color: #69bf6f;
-} */
-
 .opt {
     min-width: 200px;
-    border-style: solid;
-    border-color: #baa9b6;
 }
 
-/* .opt:hover {
-    background-color: #E6E6E6 !important;
-} */
-
-#back {
-    display: inline;
+.player {
+    display: none;
 }
 
-/* #back:hover {
-    background-color: #94aed4 !important;
-} */
-
-#submit {
-    background-color: #9aad9b;
-    color: #718a75;
-    display: inline;
-    cursor: auto;
+#explode {
+    display: none;
+    position: absolute;
 }
 
-/* #submit:hover {
-    background-color: #69bf6f !important;
-} */
-
-.loader {
-    border: 10px solid #f3f3f3; 
-    border-top: 10px solid #e89ed7; 
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 2s linear infinite;
-    margin: 0 auto;
+#win {
+    display: none;
 }
-  
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+
+#wintext {
+    display: none;
+    position: absolute;
+    top: 35%;
+    left: 13%;
+    font-family: "Comic Sans MS";
+    font-size: 80px;
+    background-color: yellow;
 }
