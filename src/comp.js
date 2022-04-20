@@ -10,6 +10,7 @@ let qtsn = 0;
 
 // sounds
 const boom = new Howl({src: ['media/boom.mp3']});
+const fart = new Howl({src: ['media/fart.mp3']});
 const correct = new Howl({src: ['media/correct.mp3']});
 const clap = new Howl({src: ['media/clap.mp3']});
 
@@ -23,8 +24,9 @@ function loadElements() {
     playerList.push({
       name: "",
       answered: false,
-      explode: false,
-      deaths: 0
+      alive: true,
+      redemption: false,
+      explode: false
     })
   }
 
@@ -32,6 +34,16 @@ function loadElements() {
   for (let i in playerList) {
     playerList[i].name = names[i];
     playerIcons[i].style.display = "inline";
+    playerIcons[i].addEventListener('click', () => {
+      let h = playerList[i];
+      if(!h.alive && !h.redemption) {
+        h.redemption = true;
+      } else if(!h.alive && h.redemption){
+        h.alive = true;
+        h.redemption = false;
+      }
+      updatePlayers();
+    });
   }
 
   // set up answer colors and click events
@@ -51,32 +63,15 @@ function loadElements() {
           ansChoices[i].style.backgroundColor = "#160040";
           ansChoices[i].style.color = "#ffffff";
           playerList[answerer].explode = true;
-          playerList[answerer].deaths++;
+          playerList[answerer].alive = false;
           document.getElementById("explode").style.display = "block";
           boom.play();
-          setTimeout(() => {document.getElementById("explode").style.display = "none";}, 1500);
+          setTimeout(() => {document.getElementById("explode").style.display = "none";}, 1500); 
           // prevent choosing new answerer
           answerer = -1;
         } else {
           qtsn++;
-          if (qtsn >= questionList.length){
-            let w = questionList.length;
-            for (let i in playerList) {
-              if (playerList[i].deaths < w) {
-                w = playerList[i].deaths;
-              }
-            }
-            
-            let t = ""
-            for (let i in playerList) {
-              if (playerList[i].deaths == w) {
-                t += `${playerList[i].name}, `;
-              }
-            }
-            congrats(t.slice(0, t.length - 2));
-          } else {
-            loadQuestion();
-          }
+          loadQuestion();
         }
       }
       updatePlayers();
@@ -90,16 +85,28 @@ function loadQuestion() {
   document.getElementById("progress").innerHTML = `Question ${qtsn+1}`;
   document.getElementById("qstn").innerHTML = questionList[qtsn].question;
 
-  // resets
+  // resets  
+  let numAlive = 0;
+  let winner;
   pressed = [1, 1, 1, 1, 1, 1, 1];
   
+  // checks playerList to count alive players 
   for (let i in playerList) {
+    if (playerList[i].alive){
+      numAlive++;
+      winner = playerList[i].name;
+    }
     playerList[i].answered = false;
     playerList[i].explode = false; 
   }
 
-  // selects random slot for incorrect answer to be in 
-  inc = Math.floor(Math.random() * (playerList.length + 1));
+  // checks if game over
+  if (numAlive == 1) {
+    congrats(winner);
+  }
+
+  // selects random slot for inc answer to be in 
+  inc = Math.floor(Math.random() * (numAlive + 1));
 
   ansNxt();
   updatePlayers();
@@ -118,18 +125,18 @@ function loadQuestion() {
   }
 
   // set answer text, show needed buttons
-  const ansReset = (j, d) => {
+  const ansRst = (j, d) => {
     ansChoices[j].innerHTML = d;
     ansChoices[j].style.display = "inline";
     ansChoices[j].style.backgroundColor = "#e0007b";
     ansChoices[j].style.color = "white";
   }
-  ansReset(inc, questionList[qtsn].wrong);
-  for (let i = 0; i < playerList.length; i++) {
+  ansRst(inc, questionList[qtsn].wrong);
+  for (let i = 0; i < numAlive; i++) {
     if(i >= inc) {
-      ansReset(+i+1, questionList[qtsn].correct[i]);
+      ansRst(+i+1, questionList[qtsn].correct[i]);
     } else {
-      ansReset(i, questionList[qtsn].correct[i]);
+      ansRst(i, questionList[qtsn].correct[i]);
     }
   }
 }
@@ -141,12 +148,7 @@ function updatePlayers() {
     
     // icon update function
     const iconUpdt = (e, bg, tc) => {
-      let pl = "death";
-      if (playerList[i].deaths != 1) {
-        pl += "s";
-      }
-
-      playerIcons[i].innerHTML = `${c.name} ${e}<br>${playerList[i].deaths} ${pl}`;
+      playerIcons[i].innerHTML = `${c.name} ${e}`;
       playerIcons[i].style.backgroundColor = bg;
       playerIcons[i].style.color = tc;
     }
@@ -154,29 +156,36 @@ function updatePlayers() {
     // updates player icon colors
     if(i == answerer) {
       iconUpdt("🤔", "#ffd129", "#1c1c21");
+    } else if(c.redemption) {
+      iconUpdt("👻", "#84849c", "#ededed");
     } else if(c.answered) {
       iconUpdt("😃", "#7ff76f", "#1c1c21");
+    } else if(c.alive) {
+      iconUpdt("😐", "#dbdbdb", "#1c1c21");
     } else if(c.explode) {
       iconUpdt("💥", "#110030", "white");
     } else {
-      iconUpdt("😐", "#dbdbdb", "#1c1c21");
-    } 
+      iconUpdt("💀", "#77778c", "#dbdbdb");
+    }
   }
 }
 
 // selects player to answer next
 function ansNxt() {
-  // makes checks to see if any answers are not pressed
-  let sum = 0;
-  for (let i in pressed) {
-    sum += pressed[i];
+  // makes sure new answerer can be found 
+  let avbl = false;
+  for(let i in playerList) {
+    if (playerList[i].alive && !playerList[i].answered) {
+      avbl = true;
+    }
   }
-  if (sum > 1) {
+  
+  if(avbl) {
     let found = false;
     while (!found) {
-      answerer = Math.floor(Math.random() * playerList.length);
+      answerer = Math.floor(Math.random() * (names.length));
       // checks if chosen answerer is eligible
-      if(!playerList[answerer].answered) {
+      if(!playerList[answerer].answered && playerList[answerer].alive) {
         found = true;
       }
     }

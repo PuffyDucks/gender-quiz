@@ -1,11 +1,9 @@
-html, body {
+html, body, #main {
     background-color: rgb(93, 93, 107);
     margin: 0;
-    height: 100%;
-}
-
-#main {
     font-family: 'Roboto Slab', serif;
+    width: 100%;
+    height: 100%;
     text-align: center;
     margin: 0 auto;
     color: white;
@@ -41,6 +39,15 @@ button {
     font-family: 'Roboto Slab', serif;
 }
 
+.nav {
+    background-color: #e0007b;
+    color: #ffffff;
+    display: inline;
+    margin: 10px;
+    padding: 20px;
+    font-size: 30px;
+}
+
 .opt {
     min-width: 20%;
     border-radius: 5px;
@@ -71,4 +78,5 @@ button {
     font-family: "Comic Sans MS";
     font-size: 80px;
     background-color: yellow;
+    color: black;
 }   
