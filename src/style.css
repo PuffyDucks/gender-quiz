@@ -1,11 +1,11 @@
 html, body {
     background-color: rgb(93, 93, 107);
     margin: 0;
+    height: 100%;
 }
 
 #main {
     font-family: 'Roboto Slab', serif;
-    height: 100%;
     text-align: center;
     margin: 0 auto;
     color: white;

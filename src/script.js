@@ -1,141 +1,87 @@
 // player data
-const playerList = [
-  {
-    name: "",
-    alive: true,
-    redemption: false,
-    answered: false,
-    explode:false
-  },
-  {
-    name: "",
-    alive: true,
-    redemption: false,
-    answered: false,
-    explode:false
-  },
-  {
-    name: "",
-    alive: true,
-    redemption: false,
-    answered: false,
-    explode:false
-  },
-  {
-    name: "",
-    alive: true,
-    redemption: false,
-    answered: false,
-    explode:false
-  },
-  {
-    name: "",
-    alive: true,
-    redemption: false,
-    answered: false,
-    explode:false
-  },
-  {
-    name: "",
-    alive: true,
-    redemption: false,
-    answered: false,
-    explode:false
-  }
-];
+const playerList = [];
 
-// question database
-var questionList;
+// button arrays
+let playerIcons, ansChoices;
 
-// list of player names to manually set
-var names;
-
-let playerIcons, ansChoices, explode, main, win, wintext;
-let answerer, inc, end, pressed;
+// variables
+let answerer, inc, pressed;
 let qtsn = 0;
 
-const boom = new Howl({
-  src: ['media/boom.mp3']
-});
-const correct = new Howl({
-  src: ['media/correct.mp3']
-});
-const clap = new Howl({
-  src: ['media/clap.mp3']
-});
+// sounds
+const boom = new Howl({src: ['media/boom.mp3']});
+const correct = new Howl({src: ['media/correct.mp3']});
+const clap = new Howl({src: ['media/clap.mp3']});
 
-// setup and html elements 
+// on page load
 function loadElements() {
   playerIcons = document.querySelectorAll(".player");
   ansChoices = document.querySelectorAll(".opt");
-  explode = document.getElementById("explode");
-  main = document.getElementById("main");
-  win = document.getElementById("win");
-  wintext = document.getElementById("wintext");
 
-  end = false;
-  pressed = [0, 0, 0, 0, 0, 0, 0];
-
-  while(playerList.length - names.length > 0) {
-    playerList.pop();
+  // set up playerdata
+  for(let i in names) {
+    playerList.push({
+      name: "",
+      answered: false,
+      explode: false,
+      deaths: 0
+    })
   }
 
   // set up player icons
   for (let i in playerList) {
     playerList[i].name = names[i];
     playerIcons[i].style.display = "inline";
-    playerIcons[i].addEventListener('click', () => {
-      let h = playerList[i];
-      if(!h.alive && !h.redemption) {
-        h.redemption = true;
-      } else if(!h.alive && h.redemption){
-        h.alive = true;
-        h.redemption = false;
-      }
-      updatePlayers();
-    });
   }
 
-  // sets up answer colors and click events
+  // set up answer colors and click events
   for (let i = 0; i < ansChoices.length; i++) {
-    // changes button color
-    const updateAns = (bg, tc) => {
-      ansChoices[i].style.backgroundColor = bg;
-      ansChoices[i].style.color = tc;
-    }
-
     // checks if answer was right, runs click events
     ansChoices[i].addEventListener('click', () => {
-      if(i != inc && answerer != -1 && pressed[i] == 0) {
-        updateAns("#755d73", "#8c7b8b");
-        pressed[i] = 1;
+      if(i != inc && answerer != -1 && pressed[i] == 1) {
+        ansChoices[i].style.backgroundColor = "#755d73";
+        ansChoices[i].style.color = "#8c7b8b";
+        pressed[i] = 0;
         playerList[answerer].answered = true;
         correct.play();
         ansNxt();
       } else if (i == inc) {
         // shows death on first click, moves on for second
-        if(!end) {
-          end = true;
-          updateAns("#42ceeb", "white");
-          if (answerer != -1) {
-            updateAns("rgb(22, 0, 64)", "white");
-            playerList[answerer].alive = false;
-            playerList[answerer].explode = true;
-            explode.style.display = "block";
-            boom.play();
-            setTimeout(() => {explode.style.display = "none";}, 1500);
-          } 
+        if(answerer != -1) {
+          ansChoices[i].style.backgroundColor = "#160040";
+          ansChoices[i].style.color = "#ffffff";
+          playerList[answerer].explode = true;
+          playerList[answerer].deaths++;
+          document.getElementById("explode").style.display = "block";
+          boom.play();
+          setTimeout(() => {document.getElementById("explode").style.display = "none";}, 1500);
           // prevent choosing new answerer
           answerer = -1;
         } else {
           qtsn++;
-          loadQuestion();
+          if (qtsn >= questionList.length){
+            let w = questionList.length;
+            for (let i in playerList) {
+              if (playerList[i].deaths < w) {
+                w = playerList[i].deaths;
+              }
+            }
+            
+            let t = ""
+            for (let i in playerList) {
+              if (playerList[i].deaths == w) {
+                t += `${playerList[i].name}, `;
+              }
+            }
+            congrats(t.slice(0, t.length - 2));
+          } else {
+            loadQuestion();
+          }
         }
       }
       updatePlayers();
     });
   }
-
   loadQuestion();
 }
 
@@ -144,37 +90,26 @@ function loadQuestion() {
   document.getElementById("progress").innerHTML = `Question ${qtsn+1}`;
   document.getElementById("qstn").innerHTML = questionList[qtsn].question;
 
-  // checks playerList to count alive players and resets answered 
-  let numAlive = 0;
-  let winner;
-  end = false;
-  pressed = [0, 0, 0, 0, 0, 0, 0];
+  // resets
+  pressed = [1, 1, 1, 1, 1, 1, 1];
   
   for (let i in playerList) {
-    if (playerList[i].alive){
-      numAlive++;
-      winner = playerList[i].name;
-    }
     playerList[i].answered = false;
     playerList[i].explode = false; 
   }
 
-  if (numAlive == 1) {
-    congrats(winner);
-  }
-
-  // selects random slot for inc answer to be in 
-  inc = Math.floor(Math.random() * (numAlive + 1));
+  // selects random slot for incorrect answer to be in 
+  inc = Math.floor(Math.random() * (playerList.length + 1));
 
   ansNxt();
   updatePlayers();
 
-  // sets up answer colors and click events
+  // makes extra buttons invisible
   for (let i = 0; i < ansChoices.length; i++) {
-    // makes extra buttons invisible
     ansChoices[i].style.display = "none";
   }
 
+  // randomize answer order
   let array = questionList[qtsn].correct;
   
   for (let i = array.length - 1; i > 0; i--) {
@@ -183,18 +118,18 @@ function loadQuestion() {
   }
 
   // set answer text, show needed buttons
-  const ansUpdt = (j, d) => {
+  const ansReset = (j, d) => {
     ansChoices[j].innerHTML = d;
     ansChoices[j].style.display = "inline";
     ansChoices[j].style.backgroundColor = "#e0007b";
     ansChoices[j].style.color = "white";
   }
-  ansUpdt(inc, questionList[qtsn].wrong);
-  for (let i = 0; i < numAlive; i++) {
+  ansReset(inc, questionList[qtsn].wrong);
+  for (let i = 0; i < playerList.length; i++) {
     if(i >= inc) {
-      ansUpdt(+i+1, questionList[qtsn].correct[i]);
+      ansReset(+i+1, questionList[qtsn].correct[i]);
     } else {
-      ansUpdt(i, questionList[qtsn].correct[i]);
+      ansReset(i, questionList[qtsn].correct[i]);
     }
   }
 }
@@ -206,7 +141,12 @@ function updatePlayers() {
     
     // icon update function
     const iconUpdt = (e, bg, tc) => {
-      playerIcons[i].innerHTML = `${c.name} ${e}`;
+      let pl = "death";
+      if (playerList[i].deaths != 1) {
+        pl += "s";
+      }
+
+      playerIcons[i].innerHTML = `${c.name} ${e}<br>${playerList[i].deaths} ${pl}`;
       playerIcons[i].style.backgroundColor = bg;
       playerIcons[i].style.color = tc;
     }
@@ -214,49 +154,43 @@ function updatePlayers() {
     // updates player icon colors
     if(i == answerer) {
       iconUpdt("🤔", "#ffd129", "#1c1c21");
-    } else if(c.redemption) {
-      iconUpdt("👻", "#84849c", "#ededed");
     } else if(c.answered) {
       iconUpdt("😃", "#7ff76f", "#1c1c21");
-    } else if(c.alive) {
-      iconUpdt("😐", "#dbdbdb", "#1c1c21");
     } else if(c.explode) {
       iconUpdt("💥", "#110030", "white");
     } else {
-      iconUpdt("💀", "#77778c", "#dbdbdb");
-    }
+      iconUpdt("😐", "#dbdbdb", "#1c1c21");
+    } 
   }
 }
 
 // selects player to answer next
 function ansNxt() {
-  // makes sure new answerer can be found 
-  let avbl = false;
-  for(let i in playerList) {
-    if (playerList[i].alive && !playerList[i].answered) {
-      avbl = true;
-    }
+  // makes checks to see if any answers are not pressed
+  let sum = 0;
+  for (let i in pressed) {
+    sum += pressed[i];
   }
-  if (!avbl) {
-    answerer = -1;
-  }
-  
-  if(avbl) {
+  if (sum > 1) {
     let found = false;
     while (!found) {
-      answerer = Math.floor(Math.random() * (names.length));
+      answerer = Math.floor(Math.random() * playerList.length);
       // checks if chosen answerer is eligible
-      if(!playerList[answerer].answered && playerList[answerer].alive) {
+      if(!playerList[answerer].answered) {
         found = true;
       }
     }
+  } else {
+    answerer = -1;
+    ansChoices[inc].style.backgroundColor = "#42ceeb";
+    ansChoices[inc].style.color = "white";
   }
 };
 
 function congrats(t) {
   clap.play();
-  main.style.display = "none";
-  win.style.display = "block";
-  wintext.style.display = "block";
-  wintext.innerHTML = `good job ${t}`;
+  document.getElementById("main").style.display = "none";
+  document.getElementById("win").style.display = "block";
+  document.getElementById("wintext").style.display = "block";
+  document.getElementById("wintext").innerHTML = `congrats ${t}`;
 }
